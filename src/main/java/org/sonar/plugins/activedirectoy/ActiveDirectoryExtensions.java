@@ -40,7 +40,7 @@ public class ActiveDirectoryExtensions extends ExtensionProvider implements Serv
 
   private final System2 system2;
 
-  ActiveDirectoryExtensions(System2 system2) {
+  public ActiveDirectoryExtensions(System2 system2) {
     this.system2 = system2;
   }
 
