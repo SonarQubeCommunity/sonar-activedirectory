@@ -20,9 +20,9 @@
 package org.sonar.plugins.activedirectoy;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import org.junit.Test;
+import org.sonar.api.config.Settings;
 import org.sonar.api.utils.System2;
 import org.sonar.plugins.activedirectoy.windows.WindowsAuthenticationHelper;
 import org.sonar.plugins.activedirectoy.windows.WindowsSecurityRealm;
@@ -34,14 +34,17 @@ import org.sonar.plugins.activedirectoy.windows.sso.servlet.SsoValidationFilter;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.sonar.api.CoreProperties.CORE_AUTHENTICATOR_REALM;
 
 public class ActiveDirectoryExtensionsTest {
 
   System2 system2 = mock(System2.class);
+  Settings settings = new Settings();
 
   @Test
   public void provideTests() {
-    ActiveDirectoryExtensions activeDirectoryExtensions = new ActiveDirectoryExtensions(system2);
+    setReamToActiveDirectory();
+    ActiveDirectoryExtensions activeDirectoryExtensions = new ActiveDirectoryExtensions(system2, settings);
 
     Object ldapExtensionsObject = activeDirectoryExtensions.provide();
     assertThat(ldapExtensionsObject).isNotNull();
@@ -49,22 +52,31 @@ public class ActiveDirectoryExtensionsTest {
 
   @Test
   public void getExtensionsDefaultOnWindowsTests() {
+    setReamToActiveDirectory();
     this.runGetExtensionsDefaultTest(true, this.getExpectedWindowsExtensions());
   }
 
   @Test
   public void getExtensionsDefaultOnNonWindowsOsTests() {
-    this.runGetExtensionsDefaultTest(false, Collections.emptyList());
+    setReamToActiveDirectory();
+    this.runGetExtensionsDefaultTest(false, getExtensionsWithoutFilters());
   }
 
   @Test
   public void getExtensionsForWindowsSecurity() {
+    setReamToActiveDirectory();
     this.runGetExtensionsTest(true, this.getExpectedWindowsExtensions());
+  }
+
+  @Test
+  public void filter_extensions_are_not_loaded_when_realm_is_not_active_directory() throws Exception {
+    settings.setProperty(CORE_AUTHENTICATOR_REALM, "LDAP");
+    this.runGetExtensionsDefaultTest(true, getExtensionsWithoutFilters());
   }
 
   private void runGetExtensionsDefaultTest(boolean isOperatingSystemWindows, List<Class<?>> expectedExtensions) {
     when(system2.isOsWindows()).thenReturn(isOperatingSystemWindows);
-    ActiveDirectoryExtensions activeDirectoryExtensions = new ActiveDirectoryExtensions(system2);
+    ActiveDirectoryExtensions activeDirectoryExtensions = new ActiveDirectoryExtensions(system2, settings);
 
     List<Class<?>> extensions = (List<Class<?>>) activeDirectoryExtensions.provide();
 
@@ -74,10 +86,14 @@ public class ActiveDirectoryExtensionsTest {
   private void runGetExtensionsTest(boolean isOperatingSystemWindows, List<Class<?>> expectedExtensions) {
     when(system2.isOsWindows()).thenReturn(isOperatingSystemWindows);
 
-    ActiveDirectoryExtensions activeDirectoryExtensions = new ActiveDirectoryExtensions(system2);
+    ActiveDirectoryExtensions activeDirectoryExtensions = new ActiveDirectoryExtensions(system2, settings);
 
     List<Class<?>> extensions = (List<Class<?>>) activeDirectoryExtensions.provide();
     assertThat(extensions).isNotNull().hasSameElementsAs(expectedExtensions);
+  }
+
+  private void setReamToActiveDirectory(){
+    settings.setProperty(CORE_AUTHENTICATOR_REALM, "ACTIVE_DIRECTORY");
   }
 
   private List<Class<?>> getExpectedWindowsExtensions() {
@@ -88,5 +104,12 @@ public class ActiveDirectoryExtensionsTest {
       SsoAuthenticationFilter.class,
       SsoValidationFilter.class,
       WindowsLogoutFilter.class);
+  }
+
+  private List<Class<?>> getExtensionsWithoutFilters() {
+    return Arrays.asList(
+      WindowsSecurityRealm.class,
+      WindowsAuthenticationHelper.class,
+      WindowsAuthSettings.class);
   }
 }

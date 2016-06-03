@@ -26,7 +26,7 @@ import org.sonar.api.security.SecurityRealm;
 
 public class WindowsSecurityRealm extends SecurityRealm {
 
-  protected static final String NAME = "ACTIVE_DIRECTORY";
+  public static final String NAME = "ACTIVE_DIRECTORY";
 
   private final WindowsAuthenticator windowsAuthenticator;
   private final WindowsUsersProvider windowsUsersProvider;

@@ -19,11 +19,9 @@
  */
 package org.sonar.plugins.activedirectoy;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import org.sonar.api.ExtensionProvider;
 import org.sonar.api.ServerExtension;
+import org.sonar.api.config.Settings;
 import org.sonar.api.utils.System2;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
@@ -34,34 +32,39 @@ import org.sonar.plugins.activedirectoy.windows.auth.servlet.WindowsLogoutFilter
 import org.sonar.plugins.activedirectoy.windows.sso.servlet.SsoAuthenticationFilter;
 import org.sonar.plugins.activedirectoy.windows.sso.servlet.SsoValidationFilter;
 
+import static java.util.Arrays.asList;
+import static org.sonar.api.CoreProperties.CORE_AUTHENTICATOR_REALM;
+
 public class ActiveDirectoryExtensions extends ExtensionProvider implements ServerExtension {
 
   private Logger LOG = Loggers.get(ActiveDirectoryExtensions.class);
 
   private final System2 system2;
+  private final Settings settings;
 
-  public ActiveDirectoryExtensions(System2 system2) {
+  public ActiveDirectoryExtensions(System2 system2, Settings settings) {
     this.system2 = system2;
+    this.settings = settings;
   }
 
   @Override
   public Object provide() {
-    if (system2.isOsWindows()) {
-      return getWindowsAuthExtensions();
-    } else {
-      LOG.warn("Active Directory plugin is installed, while the OS is not Windows.");
+    if (system2.isOsWindows() && WindowsSecurityRealm.NAME.equals(settings.getString(CORE_AUTHENTICATOR_REALM))) {
+      return asList(
+        WindowsSecurityRealm.class,
+        WindowsAuthenticationHelper.class,
+        WindowsAuthSettings.class,
+        SsoAuthenticationFilter.class,
+        SsoValidationFilter.class,
+        WindowsLogoutFilter.class);
     }
-    return Collections.emptyList();
-  }
+    LOG.warn("Active Directory plugin is installed, while the OS is not Windows.");
 
-  private List<Class<?>> getWindowsAuthExtensions() {
-    return Arrays.asList(
+    // If the realm is not set to use this plugin, do not load filter extensions
+    return asList(
       WindowsSecurityRealm.class,
       WindowsAuthenticationHelper.class,
-      WindowsAuthSettings.class,
-      SsoAuthenticationFilter.class,
-      SsoValidationFilter.class,
-      WindowsLogoutFilter.class);
+      WindowsAuthSettings.class);
   }
 
 }
