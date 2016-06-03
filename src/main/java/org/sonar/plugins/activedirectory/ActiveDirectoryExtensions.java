@@ -49,7 +49,9 @@ public class ActiveDirectoryExtensions extends ExtensionProvider implements Serv
 
   @Override
   public Object provide() {
-    if (system2.isOsWindows() && WindowsSecurityRealm.NAME.equals(settings.getString(CORE_AUTHENTICATOR_REALM))) {
+    if (!system2.isOsWindows()) {
+      LOG.warn("Active Directory plugin is installed, while the OS is not Windows.");
+    } else if (WindowsSecurityRealm.NAME.equals(settings.getString(CORE_AUTHENTICATOR_REALM))) {
       return asList(
         WindowsSecurityRealm.class,
         WindowsAuthenticationHelper.class,
@@ -58,7 +60,6 @@ public class ActiveDirectoryExtensions extends ExtensionProvider implements Serv
         SsoValidationFilter.class,
         WindowsLogoutFilter.class);
     }
-    LOG.warn("Active Directory plugin is installed, while the OS is not Windows.");
 
     // If the realm is not set to use this plugin, do not load filter extensions
     return asList(
