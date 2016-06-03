@@ -38,7 +38,7 @@ For negotiate authentication to work in SSO the following steps need to be follo
 
 Property | Description | Default value | Mandatory | Example
 ---------| ----------- | ------------- | --------- | -------
-sonar.security.realm|To first try to authenticate against the external sytem. If the external system is not reachable or if the user is not defined in the external system, the authentication will be performed through the SonarQube internal system.|None|Yes|ACTIVE_DIRECTOY (Only possible value)
+sonar.security.realm|To first try to authenticate against the external sytem. If the external system is not reachable or if the user is not defined in the external system, the authentication will be performed through the SonarQube internal system.|None|Yes|ACTIVE_DIRECTORY (Only possible value)
 ldap.windows.auth|Property to tell the plugin to use windows authentication mode or LDAP protocol|None|Yes|true (Only possible value)
 ldap.windows.group.downcase|Set to true to return the group names in lowercase. Note that this setting will be ignored if ldap.windows.compatibilityMode is set to true|true|No|true or false
 ldap.windows.sso.protocols|Protocol to be used during SSO for user authentication. Eg. "Negotiate NTLM". Note: It is recommended to use Negotiate protocol in production environments. Kerberos configuration steps have to be completed before using Negotiate protocol for authentication see [Pre-requisites for Negotiate Protocol in SSO](http://docs.sonarqube.org/display/PLUG/Pre-requisites+for+Negotiate+Protocol+in+SSO)|NTLM|No|NTML, Negociate
