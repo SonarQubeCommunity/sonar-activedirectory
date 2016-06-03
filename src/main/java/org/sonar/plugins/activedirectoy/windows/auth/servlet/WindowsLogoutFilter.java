@@ -53,7 +53,7 @@ public class WindowsLogoutFilter extends ServletFilter {
     if (session != null) {
       session.invalidate();
     }
-    ((HttpServletResponse) servletResponse).sendRedirect("/ldap/logout");
+    ((HttpServletResponse) servletResponse).sendRedirect("/active_directory/logout");
   }
 
   @Override

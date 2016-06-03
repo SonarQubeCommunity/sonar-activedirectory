@@ -20,6 +20,7 @@
 package org.sonar.plugins.activedirectoy;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.sonar.api.ExtensionProvider;
@@ -58,7 +59,7 @@ public class ActiveDirectoryExtensions extends ExtensionProvider implements Serv
       }
       return getWindowsAuthExtensions();
     }
-    return getLdapExtensions();
+    return Collections.emptyList();
   }
 
   private boolean isWindowsAuthEnabled() {
@@ -85,7 +86,4 @@ public class ActiveDirectoryExtensions extends ExtensionProvider implements Serv
       WindowsLogoutFilter.class);
   }
 
-  private List<Class<?>> getLdapExtensions() {
-    return Arrays.asList(LdapRealm.class, LdapSettingsManager.class, LdapAutodiscovery.class);
-  }
 }

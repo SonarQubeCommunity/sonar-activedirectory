@@ -58,6 +58,6 @@ public class WindowsLogoutFilterTest {
     windowsLogoutFilter.doFilter(servletRequest, servletResponse, filterChain);
 
     Mockito.verify(httpSession, Mockito.times(1)).invalidate();
-    Mockito.verify(servletResponse, Mockito.times(1)).sendRedirect("/ldap/logout");
+    Mockito.verify(servletResponse, Mockito.times(1)).sendRedirect("/active_directory/logout");
   }
 }

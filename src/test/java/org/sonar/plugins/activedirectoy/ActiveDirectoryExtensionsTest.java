@@ -20,6 +20,7 @@
 package org.sonar.plugins.activedirectoy;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import org.junit.Test;
 import org.sonar.api.config.Settings;
@@ -52,22 +53,12 @@ public class ActiveDirectoryExtensionsTest {
 
   @Test
   public void getExtensionsDefaultOnNonWindowsOsTests() {
-    this.runGetExtensionsDefaultTest(false, this.getExpectedLdapExtensions());
+    this.runGetExtensionsDefaultTest(false, Collections.emptyList());
   }
 
   @Test
   public void getExtensionsForWindowsSecurity() {
     this.runGetExtensionsTest("true", true, this.getExpectedWindowsExtensions());
-  }
-
-  @Test
-  public void getExtensionsForLdapRealm() {
-    this.runGetExtensionsTest("ldap", false, this.getExpectedLdapExtensions());
-    this.runGetExtensionsTest("", false, this.getExpectedLdapExtensions());
-    this.runGetExtensionsTest(null, false, this.getExpectedLdapExtensions());
-    this.runGetExtensionsTest("", true, this.getExpectedLdapExtensions());
-    this.runGetExtensionsTest(null, true, this.getExpectedWindowsExtensions());
-    this.runGetExtensionsTest("ldap", true, this.getExpectedLdapExtensions());
   }
 
   @Test(expected = IllegalArgumentException.class)
