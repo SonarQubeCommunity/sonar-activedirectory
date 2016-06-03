@@ -166,7 +166,7 @@
         <version>1.15</version>
         <extensions>true</extensions>
         <configuration>
-          <pluginClass>org.sonar.plugins.activedirectoy.ActiveDirectoryPlugin</pluginClass>
+          <pluginClass>org.sonar.plugins.activedirectory.ActiveDirectoryPlugin</pluginClass>
         </configuration>
       </plugin>
     </plugins>
