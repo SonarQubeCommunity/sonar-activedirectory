@@ -22,11 +22,11 @@ package org.sonar.plugins.activedirectoy;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import org.apache.commons.lang.StringUtils;
 import org.sonar.api.ExtensionProvider;
 import org.sonar.api.ServerExtension;
-import org.sonar.api.config.Settings;
 import org.sonar.api.utils.System2;
+import org.sonar.api.utils.log.Logger;
+import org.sonar.api.utils.log.Loggers;
 import org.sonar.plugins.activedirectoy.windows.WindowsAuthenticationHelper;
 import org.sonar.plugins.activedirectoy.windows.WindowsSecurityRealm;
 import org.sonar.plugins.activedirectoy.windows.auth.WindowsAuthSettings;
@@ -35,45 +35,23 @@ import org.sonar.plugins.activedirectoy.windows.sso.servlet.SsoAuthenticationFil
 import org.sonar.plugins.activedirectoy.windows.sso.servlet.SsoValidationFilter;
 
 public class ActiveDirectoryExtensions extends ExtensionProvider implements ServerExtension {
-  private final Settings settings;
+
+  private Logger LOG = Loggers.get(ActiveDirectoryExtensions.class);
+
   private final System2 system2;
 
-  public ActiveDirectoryExtensions(Settings settings) {
-    this(settings, new System2());
-  }
-
-  ActiveDirectoryExtensions(Settings settings, System2 system2) {
-    this.settings = settings;
+  ActiveDirectoryExtensions(System2 system2) {
     this.system2 = system2;
   }
 
   @Override
   public Object provide() {
-    return getExtensions();
-  }
-
-  List<Class<?>> getExtensions() {
-    if (isWindowsAuthEnabled()) {
-      if (!system2.isOsWindows()) {
-        throw new IllegalArgumentException("Windows authentication is enabled, while the OS is not Windows.");
-      }
+    if (system2.isOsWindows()) {
       return getWindowsAuthExtensions();
+    } else {
+      LOG.warn("Active Directory plugin is installed, while the OS is not Windows.");
     }
     return Collections.emptyList();
-  }
-
-  private boolean isWindowsAuthEnabled() {
-    boolean isWindowsAuthEnabled;
-    if (system2.isOsWindows()) {
-      // In Windows OS, Windows authentication is enabled by default.
-      isWindowsAuthEnabled = Boolean.parseBoolean(StringUtils.defaultString(
-        settings.getString(WindowsAuthSettings.LDAP_WINDOWS_AUTH),
-        WindowsAuthSettings.DEFAULT_SONAR_LDAP_WINDOWS_AUTH));
-    } else {
-      isWindowsAuthEnabled = settings.getBoolean(WindowsAuthSettings.LDAP_WINDOWS_AUTH);
-    }
-
-    return isWindowsAuthEnabled;
   }
 
   private List<Class<?>> getWindowsAuthExtensions() {

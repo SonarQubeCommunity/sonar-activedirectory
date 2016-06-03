@@ -23,7 +23,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.junit.Test;
-import org.sonar.api.config.Settings;
 import org.sonar.api.utils.System2;
 import org.sonar.plugins.activedirectoy.windows.WindowsAuthenticationHelper;
 import org.sonar.plugins.activedirectoy.windows.WindowsSecurityRealm;
@@ -37,10 +36,12 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class ActiveDirectoryExtensionsTest {
+
+  System2 system2 = mock(System2.class);
+
   @Test
   public void provideTests() {
-    Settings settings = new Settings();
-    ActiveDirectoryExtensions activeDirectoryExtensions = new ActiveDirectoryExtensions(settings);
+    ActiveDirectoryExtensions activeDirectoryExtensions = new ActiveDirectoryExtensions(system2);
 
     Object ldapExtensionsObject = activeDirectoryExtensions.provide();
     assertThat(ldapExtensionsObject).isNotNull();
@@ -58,47 +59,25 @@ public class ActiveDirectoryExtensionsTest {
 
   @Test
   public void getExtensionsForWindowsSecurity() {
-    this.runGetExtensionsTest("true", true, this.getExpectedWindowsExtensions());
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void getExtensionsThrowsException() {
-    Settings settings = new Settings();
-    settings.setProperty(WindowsAuthSettings.LDAP_WINDOWS_AUTH, "true");
-    System2 system2 = mock(System2.class);
-    when(system2.isOsWindows()).thenReturn(false);
-
-    ActiveDirectoryExtensions activeDirectoryExtensions = new ActiveDirectoryExtensions(settings, system2);
-
-    activeDirectoryExtensions.getExtensions();
+    this.runGetExtensionsTest(true, this.getExpectedWindowsExtensions());
   }
 
   private void runGetExtensionsDefaultTest(boolean isOperatingSystemWindows, List<Class<?>> expectedExtensions) {
-    Settings settings = new Settings();
-    System2 system2 = mock(System2.class);
     when(system2.isOsWindows()).thenReturn(isOperatingSystemWindows);
-    ActiveDirectoryExtensions activeDirectoryExtensions = new ActiveDirectoryExtensions(settings, system2);
+    ActiveDirectoryExtensions activeDirectoryExtensions = new ActiveDirectoryExtensions(system2);
 
-    List<Class<?>> extensions = activeDirectoryExtensions.getExtensions();
+    List<Class<?>> extensions = (List<Class<?>>) activeDirectoryExtensions.provide();
 
     assertThat(extensions).isNotNull().hasSameElementsAs(expectedExtensions);
   }
 
-  private void runGetExtensionsTest(String windowsAuthSettingValue, boolean isOperatingSystemWindows, List<Class<?>> expectedExtensions) {
-    Settings settings = new Settings();
-    settings.setProperty(WindowsAuthSettings.LDAP_WINDOWS_AUTH, windowsAuthSettingValue);
-
-    System2 system2 = mock(System2.class);
+  private void runGetExtensionsTest(boolean isOperatingSystemWindows, List<Class<?>> expectedExtensions) {
     when(system2.isOsWindows()).thenReturn(isOperatingSystemWindows);
 
-    ActiveDirectoryExtensions activeDirectoryExtensions = new ActiveDirectoryExtensions(settings, system2);
+    ActiveDirectoryExtensions activeDirectoryExtensions = new ActiveDirectoryExtensions(system2);
 
-    List<Class<?>> extensions = activeDirectoryExtensions.getExtensions();
+    List<Class<?>> extensions = (List<Class<?>>) activeDirectoryExtensions.provide();
     assertThat(extensions).isNotNull().hasSameElementsAs(expectedExtensions);
-  }
-
-  private List<Class<?>> getExpectedLdapExtensions() {
-    return Arrays.asList(LdapRealm.class, LdapSettingsManager.class, LdapAutodiscovery.class);
   }
 
   private List<Class<?>> getExpectedWindowsExtensions() {

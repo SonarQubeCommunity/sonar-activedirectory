@@ -34,11 +34,6 @@ public class WindowsAuthSettings {
   private static final String LDAP_WINDOWS = "ldap.windows";
 
   /**
-   * Settings to specify if Windows authentication is enabled or not.
-   */
-  public static final String LDAP_WINDOWS_AUTH = LDAP_WINDOWS + ".auth";
-
-  /**
    * Authentication protocols supported by plugin in Windows authentication mode for Single Sign on (SSO)
    */
   public static final String LDAP_WINDOWS_AUTH_SSO_PROTOCOLS = LDAP_WINDOWS + ".sso.protocols";
@@ -57,14 +52,13 @@ public class WindowsAuthSettings {
    * Setting to specify group-id attribute, which is used by plugin while returning user groups in compatibility mode
    */
   public static final String LDAP_GROUP_ID_ATTRIBUTE = "ldap.group.idAttribute";
-  
+
   /**
    * Settings to specify real name attribute for a user
    */
-  public static final String LDAP_WINDOWS_USER_REAL_NAME_ATTRIBUTE = LDAP_WINDOWS + ".user.realNameAttribute"; 
+  public static final String LDAP_WINDOWS_USER_REAL_NAME_ATTRIBUTE = LDAP_WINDOWS + ".user.realNameAttribute";
 
   public static final String DEFAULT_USER_REAL_NAME_ATTRIBUTE = "cn";
-  public static final String DEFAULT_SONAR_LDAP_WINDOWS_AUTH = "true";
   public static final String DEFAULT_SONAR_WINDOWS_AUTH_SSO_PROTOCOLS = "NTLM";
   public static final boolean DEFAULT_WINDOWS_COMPATIBILITY_MODE = false;
   public static final boolean DEFAULT_SONAR_AUTHENTICATOR_GROUP_DOWNCASE = true;
@@ -94,13 +88,6 @@ public class WindowsAuthSettings {
   }
 
   /**
-   *  Settings to specify if Windows authentication is enabled or not. By default, its value is "true".
-   */
-  public String getIsSonarLdapWindowsAuth() {
-    return StringUtils.defaultIfBlank(settings.getString(LDAP_WINDOWS_AUTH), DEFAULT_SONAR_LDAP_WINDOWS_AUTH);
-  }
-
-  /**
    * Settings to specify if Ldap Windows compatibility mode is enabled or not.  By default compatibility mode is disabled
    */
   public boolean getIsLdapWindowsCompatibilityModeEnabled() {
@@ -124,12 +111,12 @@ public class WindowsAuthSettings {
   public String getProtocols() {
     return StringUtils.defaultIfBlank(settings.getString(LDAP_WINDOWS_AUTH_SSO_PROTOCOLS), DEFAULT_SONAR_WINDOWS_AUTH_SSO_PROTOCOLS);
   }
-  
+
   /**
    * Returns the specified value for the real name attribute. By default, it's value is "cn"
    */
-  public String getLdapUserRealNameAttribute(){ 
-      return StringUtils.defaultIfBlank(settings.getString(LDAP_WINDOWS_USER_REAL_NAME_ATTRIBUTE), DEFAULT_USER_REAL_NAME_ATTRIBUTE ); 
+  public String getLdapUserRealNameAttribute() {
+    return StringUtils.defaultIfBlank(settings.getString(LDAP_WINDOWS_USER_REAL_NAME_ATTRIBUTE), DEFAULT_USER_REAL_NAME_ATTRIBUTE);
   }
 
 }

@@ -33,7 +33,6 @@ public class WindowsAuthSettingsTest {
     Settings settingsWithBlankSettings = new Settings()
       .setProperty(WindowsAuthSettings.SONAR_AUTHENTICATOR_LOGIN_DOWNCASE, "")
       .setProperty(WindowsAuthSettings.LDAP_WINDOWS_AUTH_SSO_PROTOCOLS, "")
-      .setProperty(WindowsAuthSettings.LDAP_WINDOWS_AUTH, "")
       .setProperty(WindowsAuthSettings.LDAP_GROUP_ID_ATTRIBUTE, "")
       .setProperty(WindowsAuthSettings.LDAP_WINDOWS_COMPATIBILITY_MODE, "")
       .setProperty(WindowsAuthSettings.LDAP_WINDOWS_USER_REAL_NAME_ATTRIBUTE, "");
@@ -48,7 +47,6 @@ public class WindowsAuthSettingsTest {
     final boolean sonarAuthenticatorDownCase = false;
     final boolean sonarAuthenticatorGroupDownCase = false;
     final boolean sonarLdapWindowsCompatibilityMode = true;
-    final String sonarLdapWindowsAuth = "true";
     final String sonarLdapWindowsGroupIdAttribute = "userPrincipalName";
     final String protocols = "someProtocol1 someProtocol2";
     final String userRealNameAttribute = "someAttribute";
@@ -56,7 +54,6 @@ public class WindowsAuthSettingsTest {
     Settings settings = new Settings()
       .setProperty(WindowsAuthSettings.LDAP_WINDOWS_GROUP_DOWNCASE, Boolean.toString(sonarAuthenticatorGroupDownCase))
       .setProperty(WindowsAuthSettings.SONAR_AUTHENTICATOR_LOGIN_DOWNCASE, Boolean.toString(sonarAuthenticatorDownCase))
-      .setProperty(WindowsAuthSettings.LDAP_WINDOWS_AUTH, sonarLdapWindowsAuth)
       .setProperty(WindowsAuthSettings.LDAP_WINDOWS_COMPATIBILITY_MODE, Boolean.toString(sonarLdapWindowsCompatibilityMode))
       .setProperty(WindowsAuthSettings.LDAP_GROUP_ID_ATTRIBUTE, sonarLdapWindowsGroupIdAttribute)
       .setProperty(WindowsAuthSettings.LDAP_WINDOWS_AUTH_SSO_PROTOCOLS, protocols)
@@ -66,7 +63,6 @@ public class WindowsAuthSettingsTest {
 
     assertThat(windowsAuthSettings.getIsSonarAuthenticatorGroupDownCase()).isEqualTo(sonarAuthenticatorGroupDownCase);
     assertThat(windowsAuthSettings.getIsSonarAuthenticatorLoginDownCase()).isEqualTo(sonarAuthenticatorDownCase);
-    assertThat(windowsAuthSettings.getIsSonarLdapWindowsAuth()).isEqualTo(sonarLdapWindowsAuth);
     assertThat(windowsAuthSettings.getIsLdapWindowsCompatibilityModeEnabled()).isEqualTo(sonarLdapWindowsCompatibilityMode);
     assertThat(windowsAuthSettings.getGroupIdAttribute()).isEqualTo(sonarLdapWindowsGroupIdAttribute);
     assertThat(windowsAuthSettings.getProtocols()).isEqualTo(protocols);
@@ -76,7 +72,6 @@ public class WindowsAuthSettingsTest {
   private static void validateDefaultSettings(WindowsAuthSettings windowsAuthSettings) {
     assertThat(windowsAuthSettings.getIsSonarAuthenticatorGroupDownCase()).isEqualTo(WindowsAuthSettings.DEFAULT_SONAR_AUTHENTICATOR_GROUP_DOWNCASE);
     assertThat(windowsAuthSettings.getIsSonarAuthenticatorLoginDownCase()).isEqualTo(false);
-    assertThat(windowsAuthSettings.getIsSonarLdapWindowsAuth()).isEqualTo(WindowsAuthSettings.DEFAULT_SONAR_LDAP_WINDOWS_AUTH);
     assertThat(windowsAuthSettings.getIsLdapWindowsCompatibilityModeEnabled()).isEqualTo(WindowsAuthSettings.DEFAULT_WINDOWS_COMPATIBILITY_MODE);
     assertThat(windowsAuthSettings.getGroupIdAttribute()).isEqualTo(WindowsAuthSettings.DEFAULT_LDAP_WINDOWS_GROUP_ID_ATTRIBUTE);
     assertThat(windowsAuthSettings.getProtocols()).isEqualTo(WindowsAuthSettings.DEFAULT_SONAR_WINDOWS_AUTH_SSO_PROTOCOLS);
