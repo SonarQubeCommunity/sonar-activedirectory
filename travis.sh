@@ -15,6 +15,3 @@ start_xvfb
 # CI
 mvn verify -B -e -V
 
-# integration tests
-cd it
-mvn -DldapVersion="DEV" -Dsonar.runtimeVersion="DEV" -Dmaven.test.redirectTestOutputToFile=false verify -B -e -V
