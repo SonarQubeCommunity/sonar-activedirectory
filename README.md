@@ -98,7 +98,7 @@ Option 1: Move to the new model. (Recommended)
 Option 2: Keep using the old model and add the following to the sonar.properties
 ```
 # LDAP configuration
-sonar.security.realm=LDAP
+sonar.security.realm=ACTIVE_DIRECTORY
 
 ldap.windows.compatibilityMode = true
 ```
