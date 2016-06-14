@@ -38,7 +38,7 @@ class ActiveDirectoryController < ApplicationController
       self.current_user.forget_me
     end
     cookies.delete :auth_token
-    redirect_to("/sessions/login")
     reset_session
+    redirect_to("/sessions/login")
   end
 end
