@@ -169,6 +169,17 @@
           <pluginClass>org.sonar.plugins.activedirectory.ActiveDirectoryPlugin</pluginClass>
         </configuration>
       </plugin>
+
+      <plugin>
+        <groupId>de.jutzig</groupId>
+        <artifactId>github-release-plugin</artifactId>
+        <version>1.1.1</version>
+        <configuration>
+          <description>First version</description>
+          <releaseName>1.0</releaseName>
+          <tag>${project.version}</tag>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 
