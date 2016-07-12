@@ -8,10 +8,14 @@ It automatically logs in user using Single Sign On (SSO) with Active Directory C
 During the first authentication trial, the SonarQube database is automatically populated with the new user.
 Each time a user logs into SonarQube, the username, the email and the groups this user belongs to that are refreshed in the SonarQube database.
 
+> __Warning__
+>
+> This plugin is only working on Windows OS
+
 
 ## Installation ##
 
-1. Install the plugin through the [Update Center](http://docs.sonarqube.org/display/SONAR/Update+Center) or download it into the *SONARQUBE_HOME/extensions/plugins* directory
+1. Download the plugin into the *SONARQUBE_HOME/extensions/plugins* directory
 1. Restart the SonarQube server
 
 
