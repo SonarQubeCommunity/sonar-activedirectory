@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
 import org.sonar.api.web.ServletFilter;
+import org.sonar.plugins.activedirectory.ContextUtil;
 import org.sonar.plugins.activedirectory.windows.WindowsAuthenticationHelper;
 import org.sonar.plugins.activedirectory.windows.auth.WindowsAuthSettings;
 import org.sonar.plugins.activedirectory.windows.sso.WaffleSettings;
@@ -65,7 +66,7 @@ public class SsoAuthenticationFilter extends ServletFilter {
 
   @Override
   public UrlPattern doGetPattern() {
-    return UrlPattern.create("/sessions/new");
+    return UrlPattern.create(ContextUtil.getContextPath().concat("/sessions/new"));
   }
 
   @Override

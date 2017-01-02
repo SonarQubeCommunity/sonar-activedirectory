@@ -39,6 +39,6 @@ class ActiveDirectoryController < ApplicationController
     end
     cookies.delete :auth_token
     reset_session
-    redirect_to("/sessions/login")
+    redirect_to("/sonar/sessions/login")
   end
 end

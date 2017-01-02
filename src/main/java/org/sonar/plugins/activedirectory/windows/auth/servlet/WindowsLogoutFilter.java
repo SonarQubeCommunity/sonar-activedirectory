@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.sonar.api.web.ServletFilter;
+import org.sonar.plugins.activedirectory.ContextUtil;
 
 /**
  * A Sessions logout filter
@@ -37,7 +38,7 @@ public class WindowsLogoutFilter extends ServletFilter {
 
   @Override
   public UrlPattern doGetPattern() {
-    return UrlPattern.create("/sessions/logout");
+    return UrlPattern.create(ContextUtil.getContextPath().concat("/sessions/logout"));
   }
 
   @Override
@@ -53,7 +54,7 @@ public class WindowsLogoutFilter extends ServletFilter {
     if (session != null) {
       session.invalidate();
     }
-    ((HttpServletResponse) servletResponse).sendRedirect("/active_directory/logout");
+    ((HttpServletResponse) servletResponse).sendRedirect(ContextUtil.getContextPath().concat("/active_directory/logout"));
   }
 
   @Override
